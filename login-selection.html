@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Selection | Gadaa Bank Voting System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+    <style>
+        :root {
+            --primary-red: #d61f26;
+            --deep-black: #111111;
+            --soft-white: #ffffff;
+            --light-gray: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .selection-header {
+            text-align: center;
+            padding: 80px 20px 40px;
+            background: linear-gradient(135deg, #fff 0%, #f4f4f4 100%);
+            border-bottom: 3px solid var(--primary-red);
+        }
+
+        .selection-header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--deep-black);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .selection-header h1 span {
+            color: var(--primary-red);
+        }
+
+        .selection-header p {
+            font-size: 18px;
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            /* Removed negative margin for better natural alignment */
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .selection-card {
+            background: var(--soft-white);
+            border-radius: 20px;
+            padding: 50px 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            /* Changed to flex-start and used margin-top on button */
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            /* Ensure cards fill grid row height */
+        }
+
+        .selection-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary-red);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .selection-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(214, 31, 38, 0.15);
+            border-color: rgba(214, 31, 38, 0.2);
+        }
+
+        .selection-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .icon-box {
+            width: 90px;
+            height: 90px;
+            background: var(--deep-black);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            transform: rotate(-5deg);
+            flex-shrink: 0;
+            /* Prevent icon box from shrinking */
+        }
+
+        .selection-card:hover .icon-box {
+            background: var(--primary-red);
+            transform: rotate(0deg) scale(1.1);
+            border-radius: 50%;
+        }
+
+        .icon-box img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            filter: invert(1);
+            /* Makes black icons white for the black bg box */
+        }
+
+        .icon-box img.large-icon {
+            width: 65px;
+            height: 65px;
+        }
+
+        .selection-card:hover .icon-box img {
+            filter: invert(0);
+            /* Reverts to original (or black) when bg turns red if needed */
+        }
+
+        .selection-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--deep-black);
+        }
+
+        .selection-card p {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            flex-grow: 1;
+            /* Pushes the button to the bottom */
+        }
+
+        .login-btn {
+            display: inline-block;
+            padding: 12px 35px;
+            background-color: var(--deep-black);
+            color: var(--soft-white);
+            border-radius: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--deep-black);
+            margin-top: auto;
+            /* Absolute bottom alignment */
+        }
+
+        .selection-card:hover .login-btn {
+            background-color: var(--primary-red);
+            border-color: var(--primary-red);
+            box-shadow: 0 10px 20px rgba(214, 31, 38, 0.3);
+        }
+
+        .main-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        footer {
+            margin-top: auto;
+            background: var(--deep-black);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 30px;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Information Bar -->
+    <div class="top-bar">
+        <span><i class="fas fa-phone-alt"></i> 641</span>
+        <span><i class="fas fa-envelope"></i> info@gadaabank.com.et</span>
+        <span><i class="fas fa-map-marker-alt"></i> Head Office – Addis Ababa</span>
+    </div>
+
+    <!-- Logo Section -->
+    <div class="logo-bar">
+        <img src="assets/images/logo.png" alt="Gadaa Bank Logo">
+        <div>
+            <h2>Gadaa Bank</h2>
+            <small>New Generation’s Bank</small>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="about-us.php">About us</a>
+        <a href="#">Candidates</a>
+        <a href="results.php">Results</a>
+        <a href="login-selection.html">Login</a>
+        <a href="#">Contact</a>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="selection-header">
+        <h1>Secure <span>Portal</span> Access</h1>
+        <p>Choose your administrative or participant role to securely access the voting dashboard.</p>
+    </header>
+
+    <!-- Selection Grid -->
+    <section class="selection-grid">
+        <a href="officer-login.html" class="selection-card">
+            <div class="icon-box">
+                <img src="assets/images/register.png" alt="Officer Icon" class="large-icon">
+            </div>
+            <h3>Election Officer</h3>
+            <p>Authorized to register new voters, scrutinize candidate profiles, maintain security via password
+                management, and provide official oversight comments.</p>
+            <span class="login-btn">Secure Officer Login</span>
+        </a>
+
+        <a href="candidate-login.html" class="selection-card">
+            <div class="icon-box">
+                <img src="assets/images/candidate.png" alt="Candidate Icon">
+            </div>
+            <h3>Candidate</h3>
+            <p>Monitor your campaign's progress, review competitor profiles, and manage your account security
+                credentials through our encrypted portal.</p>
+            <span class="login-btn">Secure Candidate Login</span>
+        </a>
+
+        <a href="voter-login.html" class="selection-card">
+            <div class="icon-box">
+                <img src="assets/images/vote.png" alt="Voter Icon">
+            </div>
+            <h3>Voter</h3>
+            <p>Exercise your democratic right: cast your secure vote, explore detailed candidate manifestos, and
+                contribute feedback through our engagement system.</p>
+            <span class="login-btn">Secure Voter Login</span>
+        </a>
+
+        <a href="admin-login.html" class="selection-card">
+            <div class="icon-box">
+                <img src="assets/images/admin.png" alt="Admin Icon">
+            </div>
+            <h3>System Admin</h3>
+            <p>Full-scale infrastructure management: oversee all accounts, configure global voting parameters, and
+                generate high-fidelity analytical reports.</p>
+            <span class="login-btn">Secure Admin Login</span>
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2026 Gadaa Bank. All Rights Reserved. | Secure Voting Environment</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

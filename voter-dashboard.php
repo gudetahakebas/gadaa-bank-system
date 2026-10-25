@@ -1,0 +1,346 @@
+<?php
+session_start();
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'voter') {
+    header("Location: voter-login.html");
+    exit();
+}
+require_once 'db_config.php';
+$stmtV = $pdo->prepare("SELECT voter_category FROM voters WHERE voter_id_str = ?");
+$stmtV->execute([$_SESSION['username']]);
+$voter_category = $stmtV->fetchColumn();
+$is_uncategorized = ($voter_category === 'Uncategorized');
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voter Dashboard | Gadaa Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+    <link rel="stylesheet" href="assets/css/notifications.css">
+</head>
+
+<body>
+
+    <!-- Top Information Bar -->
+    <div class="top-bar">
+        <span><i class="fas fa-phone-alt"></i> 641</span>
+        <span><i class="fas fa-envelope"></i> info@gadaabank.com.et</span>
+        <span><i class="fas fa-map-marker-alt"></i> Head Office – Addis Ababa</span>
+    </div>
+
+    <!-- Logo Section -->
+    <div class="logo-bar">
+        <img src="assets/images/logo.png" alt="Gadaa Bank Logo">
+        <div>
+            <h2>Gadaa Bank</h2>
+            <small>New Generation’s Bank Dashboard</small>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-user"></i> <span id="profName">Voter Portal</span></h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-link active" onclick="showModule('view-candidates')">
+                    <i class="fas fa-users"></i> View Candidates
+                </a>
+                <a href="#" class="nav-link" onclick="showModule('cast-vote')">
+                    <i class="fas fa-vote-yea"></i> Cast Vote
+                </a>
+                <a href="#" class="nav-link" onclick="showModule('voter-results')">
+                    <i class="fas fa-poll-h"></i> Election Results
+                </a>
+                <a href="logout.php" class="nav-link"
+                    style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.1)">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <?php if ($is_uncategorized): ?>
+            <div class="dashboard-card" style="border-left: 5px solid red; background: #fff3f3; margin-top: 20px;">
+                <h2><i class="fas fa-exclamation-triangle" style="color: red;"></i> Admin Verification Required</h2>
+                <p>Your voter profile is currently uncategorized. Please wait for a System Administrator to assign your shareholder category before you can view candidates or cast a vote.</p>
+            </div>
+            <?php else: ?>
+
+            <!-- View Candidates Module -->
+            <div id="view-candidates" class="module-content active">
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-users"></i> Candidates</h2>
+                    <p>Review the profiles of all finalized candidates before casting your vote.</p>
+                    <div id="candidateGrid"
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                        <!-- JS will populate cards -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cast Vote Module -->
+            <div id="cast-vote" class="module-content">
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-vote-yea"></i> Place Your Vote</h2>
+                    <p>Select your preferred candidate and click "Confirm Vote". Remember, you can only vote once.</p>
+                    <div class="vote-form" style="max-width: 600px; margin: 20px auto;">
+                        <div id="voteOptionsContainer">
+                            <!-- JS will populate options -->
+                        </div>
+                        <button onclick="handleVoteSubmit()" id="submitVoteBtn" class="btn-red"
+                            style="width: 100%; margin-top: 20px;" disabled>
+                            <i class="fas fa-check-circle"></i> Confirm Vote
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Election Results Module -->
+            <div id="voter-results" class="module-content">
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-poll-h"></i> System Generated Results</h2>
+                    <p>Official results as generated by the System Administrator.</p>
+                    <div class="dashboard-card" style="background: #f8f9fa;">
+                        <p style="text-align:center; padding: 20px;">Results are hidden until the Administrator
+                            publishes them.</p>
+                    </div>
+                </div>
+            </div>
+
+            <?php endif; ?>
+
+            <!-- Candidate Profile Modal -->
+            <div id="candidateModal" class="modal-overlay">
+                <div class="modal-content">
+                    <span class="close-modal" onclick="closeCandidateModal()">&times;</span>
+                    <div class="modal-header">
+                        <img id="modalPhoto" src="" alt="Candidate Photo">
+                        <div>
+                            <h2 id="modalName">Name</h2>
+                            <p id="modalId" style="color:#666; margin: 0;">ID</p>
+                            <span id="modalCategory" class="badge" style="display:inline-block; margin-top:5px; background:var(--primary-red); color:white;">Category</span>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <strong>Age</strong> <span id="modalAge"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Gender</strong> <span id="modalSex"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Education</strong> <span id="modalEducation"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Experience</strong> <span id="modalExperience"></span> years
+                            </div>
+                        </div>
+                        <div class="bio-section">
+                            <h3>Biography</h3>
+                            <p id="modalBio"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-red" onclick="goToVote()" style="width: 100%;"><i class="fas fa-vote-yea"></i> Vote for this Candidate</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Gadaa Bank. All Rights Reserved. | Voter Portal v1.0</p>
+    </footer>
+
+    <script>
+
+        async function loadProfile() {
+            try {
+                const response = await fetch('get_profile.php');
+                const result = await response.json();
+                if (result.status === 'success') {
+                    const profile = result.data;
+                    document.getElementById('profName').innerText = profile.name;
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        // Init logic
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProfile();
+            refreshCandidateData();
+        });
+
+        function showModule(moduleId) {
+            document.querySelectorAll('.module-content').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
+            document.getElementById(moduleId).classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            if (moduleId === 'view-candidates' || moduleId === 'cast-vote') refreshCandidateData();
+        }
+
+        async function refreshCandidateData() {
+            const grid = document.getElementById('candidateGrid');
+            const options = document.getElementById('voteOptionsContainer');
+
+            try {
+                const response = await fetch('get_candidates.php');
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const finalizedCands = result.data;
+
+                    if (finalizedCands.length === 0) {
+                        const noCands = '<p style="text-align:center; padding: 20px;">No candidates available at the moment.</p>';
+                        grid.innerHTML = noCands;
+                        options.innerHTML = noCands;
+                        return;
+                    }
+
+                    // Populate Grid
+                    grid.innerHTML = '';
+                    finalizedCands.forEach(c => {
+                        const safeC = JSON.stringify(c).replace(/"/g, '&quot;');
+                        let photoUrl = c.photo && c.photo.startsWith('uploads/') ? c.photo : `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=random&color=fff&size=150&font-size=0.33`;
+                        grid.innerHTML += `
+                            <div class="dashboard-card candidate-card" style="margin-bottom:0; text-align:center; padding: 20px; border: 1px solid #eee; display: flex; flex-direction: column; justify-content: space-between;" onclick="showCandidateModal(${safeC})">
+                                <div>
+                                    <div style="overflow: hidden; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); border: 1px solid #eaeaea; background: white;">
+                                        <img src="${photoUrl}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=random&color=fff&size=250&font-size=0.33'" style="width: 100%; height: 220px; object-fit: contain; display: block; transition: transform 0.4s ease; background-color: #fcfcfc;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                                    </div>
+                                    <h4 style="margin-bottom:5px; font-size: 18px; color: var(--deep-black);">${c.name}</h4>
+                                    <small style="color:#666; display:block; margin-bottom:10px; font-weight: 600;">ID: ${c.id}</small>
+                                    <span class="badge" style="background: rgba(214,31,38,0.1); color: var(--primary-red); padding: 5px 10px; font-size: 11px; margin-bottom: 15px; display: inline-block; white-space: normal;">${c.candidate_category}</span>
+                                    <p style="font-size:13px; color: #555; margin-bottom: 15px;"><i class="fas fa-graduation-cap"></i> ${c.education} <br> <i class="fas fa-briefcase"></i> ${c.experience} yrs exp</p>
+                                </div>
+                                <button class="btn-red" style="padding: 8px 15px; font-size: 13px; border-radius: 20px; width: 100%; transition: all 0.3s; margin-top: auto;">View Full Profile</button>
+                            </div>
+                        `;
+                    });
+
+                    // Populate Vote Options
+                    options.innerHTML = '';
+                    finalizedCands.forEach(c => {
+                        let photoUrl = c.photo && c.photo.startsWith('uploads/') ? c.photo : `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=random&color=fff&size=150&font-size=0.33`;
+                        options.innerHTML += `
+                            <label style="display:flex; align-items:center; gap:20px; background:#f9f9f9; padding:15px; border-radius:12px; margin-bottom:12px; cursor:pointer; border: 2px solid transparent; transition:0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05);" class="vote-option">
+                                <input type="radio" name="candidateSelection" value="${c.id}" onchange="enableVoteBtn()" style="transform: scale(1.5); margin-left: 10px;">
+                                <img src="${photoUrl}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=random&color=fff&size=150&font-size=0.33'" style="width:60px; height:60px; border-radius:50%; object-fit: cover; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-size: 18px; color: var(--deep-black);"><strong>${c.name}</strong></span>
+                                    <span style="font-size: 13px; color: #666;">ID: ${c.id} | ${c.candidate_category}</span>
+                                </div>
+                            </label>
+                        `;
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching candidates:', error);
+            }
+        }
+
+        function enableVoteBtn() {
+            document.getElementById('submitVoteBtn').disabled = false;
+            // Highlight selected
+            document.querySelectorAll('.vote-option').forEach(opt => opt.style.borderColor = 'transparent');
+            const selected = document.querySelector('input[name="candidateSelection"]:checked');
+            if (selected) selected.parentElement.style.borderColor = 'var(--primary-red)';
+        }
+
+        async function handleVoteSubmit() {
+            const selected = document.querySelector('input[name="candidateSelection"]:checked');
+            if (!selected) return;
+
+            if (confirm('Are you sure you want to cast your vote for ' + selected.nextElementSibling.innerText + '?')) {
+                const formData = new FormData();
+                formData.append('candidateID', selected.value);
+
+                try {
+                    const response = await fetch('cast_vote.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+
+                    if (result.status === 'success') {
+                        showNotification(result.message, result.status === 'success' ? 'success' : 'error');
+                        document.getElementById('submitVoteBtn').disabled = true;
+                        document.querySelectorAll('input[name="candidateSelection"]').forEach(i => i.disabled = true);
+                    } else {
+                        showNotification('Error: ' + result.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error casting vote:', error);
+                    showNotification('An error occurred. Please try again.', 'error');
+                }
+            }
+        }
+
+        let currentModalCandidateId = null;
+
+        function showCandidateModal(candidate) {
+            currentModalCandidateId = candidate.id;
+            let photoUrl = candidate.photo && candidate.photo.startsWith('uploads/') ? candidate.photo : `https://ui-avatars.com/api/?name=${encodeURIComponent(candidate.name)}&background=random&color=fff&size=200&font-size=0.33`;
+            document.getElementById('modalPhoto').src = photoUrl;
+            document.getElementById('modalPhoto').onerror = function() { this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(candidate.name)}&background=random&color=fff&size=200&font-size=0.33`; };
+            document.getElementById('modalName').innerText = candidate.name;
+            document.getElementById('modalId').innerText = 'ID: ' + candidate.id;
+            document.getElementById('modalCategory').innerText = candidate.candidate_category;
+            
+            document.getElementById('modalAge').innerText = candidate.age ? candidate.age : 'N/A';
+            document.getElementById('modalSex').innerText = candidate.sex ? candidate.sex : 'N/A';
+            document.getElementById('modalEducation').innerText = candidate.education;
+            document.getElementById('modalExperience').innerText = candidate.experience;
+            document.getElementById('modalBio').innerText = candidate.bio ? candidate.bio : 'No biography available for this candidate.';
+            
+            document.getElementById('candidateModal').classList.add('show');
+        }
+
+        function closeCandidateModal() {
+            document.getElementById('candidateModal').classList.remove('show');
+        }
+
+        function goToVote() {
+            closeCandidateModal();
+            showModule('cast-vote');
+            
+            // Select the radio button for this candidate if it exists
+            setTimeout(() => {
+                const radios = document.querySelectorAll('input[name="candidateSelection"]');
+                radios.forEach(r => {
+                    if (r.value === currentModalCandidateId) {
+                        r.checked = true;
+                        enableVoteBtn(); // Call the existing function to highlight
+                    }
+                });
+            }, 100);
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('candidateModal');
+            if (event.target === modal) {
+                closeCandidateModal();
+            }
+        }
+    </script>
+    <script src="assets/js/notifications.js"></script>
+</body>
+
+</html>
+
+

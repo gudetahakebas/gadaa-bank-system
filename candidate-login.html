@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Login | Gadaa Bank Voting System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+    <link rel="stylesheet" href="assets/css/notifications.css">
+</head>
+
+<body>
+
+    <!-- Top Information Bar -->
+    <div class="top-bar">
+        <span><i class="fas fa-phone-alt"></i> 641</span>
+        <span><i class="fas fa-envelope"></i> info@gadaabank.com.et</span>
+        <span><i class="fas fa-map-marker-alt"></i> Head Office – Addis Ababa</span>
+    </div>
+
+    <!-- Logo Section -->
+    <div class="logo-bar">
+        <img src="assets/images/logo.png" alt="Gadaa Bank Logo">
+        <div>
+            <h2>Gadaa Bank</h2>
+            <small>New Generation’s Bank</small>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="about-us.php">About us</a>
+        <a href="#">Candidates</a>
+        <a href="results.php">Results</a>
+        <a href="login-selection.html">Login</a>
+        <a href="#">Contact</a>
+    </nav>
+
+    <!-- Login Section -->
+    <section class="login-section">
+        <div class="login-box">
+            <h2>Candidate <span>Login</span></h2>
+            <form id="candidateLoginForm">
+                <input type="hidden" name="role" value="candidate">
+                <label for="candidateID">Candidate Username</label>
+                <input type="text" id="candidateID" name="username" placeholder="Enter user name" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+                <button type="submit" class="btn-red"><i class="fas fa-user-tie"></i> Login</button>
+            </form>
+
+            <script>
+                document.getElementById('candidateLoginForm').onsubmit = async function (e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    try {
+                        const response = await fetch('login.php', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            window.location.href = data.redirect;
+                        } else {
+                            showNotification(data.message, data.status === 'success' ? 'success' : 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        showNotification('An error occurred. Please try again.', 'error');
+                    }
+                };
+            </script>
+
+            <p class="note">Candidates can monitor personal and peer profiles and manage secure account settings.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Gadaa Bank. All Rights Reserved. | Secure Digital Governance</p>
+    </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('input[type="password"]').forEach(input => {
+            const container = document.createElement('div');
+            container.style.marginTop = '5px';
+            container.style.marginBottom = '15px';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.style.marginRight = '8px';
+            checkbox.style.cursor = 'pointer';
+            checkbox.style.width = 'auto';
+            checkbox.style.display = 'inline-block';
+            
+            const label = document.createElement('label');
+            label.style.fontSize = '14px';
+            label.style.color = '#555';
+            label.style.cursor = 'pointer';
+            label.style.display = 'flex';
+            label.style.alignItems = 'center';
+            label.style.fontWeight = 'normal';
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(' Show Password'));
+            
+            container.appendChild(label);
+            input.parentNode.insertBefore(container, input.nextSibling);
+            
+            checkbox.addEventListener('change', function() {
+                input.type = this.checked ? 'text' : 'password';
+            });
+        });
+    });
+</script>
+    <script src="assets/js/notifications.js"></script>
+</body>
+
+</html>
+
+

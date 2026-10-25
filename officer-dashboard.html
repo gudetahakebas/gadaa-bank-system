@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Officer Dashboard | Gadaa Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+</head>
+
+<body>
+
+    <!-- Top Information Bar -->
+    <div class="top-bar">
+        <span><i class="fas fa-phone-alt"></i> 641</span>
+        <span><i class="fas fa-envelope"></i> info@gadaabank.com.et</span>
+        <span><i class="fas fa-map-marker-alt"></i> Head Office – Addis Ababa</span>
+    </div>
+
+    <!-- Logo Section -->
+    <div class="logo-bar">
+        <img src="assets/images/logo.png" alt="Gadaa Bank Logo">
+        <div>
+            <h2>Gadaa Bank</h2>
+            <small>New Generation’s Bank Dashboard</small>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-user-tie"></i> Election Officer</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-link active" onclick="showModule('register-candidate')">
+                    <i class="fas fa-user-plus"></i> Register Candidate
+                </a>
+                <a href="#" class="nav-link" onclick="showModule('register-voter')">
+                    <i class="fas fa-id-card"></i> Register Voter
+                </a>
+                <a href="#" class="nav-link" onclick="showModule('scrutiny')">
+                    <i class="fas fa-filter"></i> Scrutiny (Filter)
+                </a>
+                <a href="#" class="nav-link" onclick="showModule('view-candidates')">
+                    <i class="fas fa-users"></i> List Candidates
+                </a>
+                <a href="#" class="nav-link" onclick="showModule('change-password')">
+                    <i class="fas fa-key"></i> Change Passwords
+                </a>
+                <a href="#" class="nav-link" onclick="showModule('view-results')">
+                    <i class="fas fa-poll-h"></i> Election Results
+                </a>
+                <a href="index.html" class="nav-link"
+                    style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.1)">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Register Candidate Module -->
+            <div id="register-candidate" class="module-content active">
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-user-plus"></i> Candidate Registration</h2>
+                    <form onsubmit="handleCandidateRegistration(event)">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" id="candFirstName" placeholder="Enter first name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Middle Name</label>
+                                <input type="text" id="candMiddleName" placeholder="Enter middle name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" id="candLastName" placeholder="Enter last name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Age</label>
+                                <input type="number" id="candAge" placeholder="Age" min="25" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Sex</label>
+                                <select id="candSex" required>
+                                    <option value="">Select Sex</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="candEmail" placeholder="email@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" id="candPhone" placeholder="+251..." required>
+                            </div>
+                            <div class="form-group">
+                                <label>Candidate ID</label>
+                                <input type="text" id="candID" placeholder="Assign unique ID" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Login Password</label>
+                                <input type="password" id="candPwd" placeholder="Set initial password" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Education Level</label>
+                                <select id="candEdu" required>
+                                    <option value="">Select Level</option>
+                                    <option value="BSc">Bachelor's Degree</option>
+                                    <option value="MSc">Master's Degree</option>
+                                    <option value="PhD">PhD</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Experience (Years)</label>
+                                <input type="number" id="candExp" placeholder="Years of experience" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Candidate Photograph (Image)</label>
+                                <input type="file" id="candPhoto" accept="image/*">
+                            </div>
+                            <div class="form-group">
+                                <label>Education and Experience Document (PDF)</label>
+                                <input type="file" id="candDocs" accept=".pdf">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Professional Biography</label>
+                            <textarea id="candBio" rows="3" placeholder="Briefly describe background..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-red"><i class="fas fa-save"></i> Register Candidate</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Register Voter Module -->
+            <div id="register-voter" class="module-content">
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-id-card"></i> Voter Registration</h2>
+                    <form onsubmit="handleVoterRegistration(event)">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" id="voterFirstName" placeholder="Enter first name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Middle Name</label>
+                                <input type="text" id="voterMiddleName" placeholder="Enter middle name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" id="voterLastName" placeholder="Enter last name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Age</label>
+                                <input type="number" id="voterAge" placeholder="Age" min="18" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Sex</label>
+                                <select id="voterSex" required>
+                                    <option value="">Select Sex</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="voterEmail" placeholder="email@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" id="voterPhone" placeholder="+251..." required>
+                            </div>
+                            <div class="form-group">
+                                <label>User Name</label>
+                                <input type="text" id="voterID" placeholder="Assign user name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Login Password</label>
+                                <input type="password" id="voterPwd" placeholder="Set initial password" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Shareholder Status</label>
+                                <select id="voterStatus" required>
+                                    <option value="no">Not Approved Yet</option>
+                                    <option value="yes">Approved Shareholder</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Share Value (ETB)</label>
+                                <input type="number" id="voterShares" placeholder="Value of shares held" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Voter Photograph (Image)</label>
+                                <input type="file" id="voterPhoto" accept="image/*">
+                            </div>
+                            <div class="form-group">
+                                <label>Shareholder Document (PDF)</label>
+                                <input type="file" id="voterShareDoc" accept=".pdf">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-red"><i class="fas fa-check-circle"></i> Register
+                            Voter</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Scrutiny Module -->
+            <div id="scrutiny" class="module-content">
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-filter"></i> Candidate Scrutiny</h2>
+                    <p>Review and filter registered candidates to determine final list for election.</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Education</th>
+                                <th>Experience</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scrutinyTableBody">
+                            <!-- JS will populate this -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- List Candidates Module -->
+            <div id="view-candidates" class="module-content">
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-users"></i> Registered Candidates</h2>
+                    <div id="candidateListContainer">
+                        <!-- JS will populate cards -->
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-user-check"></i> Final Scrutinized Candidates</h2>
+                    <div id="finalCandidateListContainer">
+                        <!-- JS will populate cards -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Management Module -->
+            <div id="change-password" class="module-content">
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-key"></i> Change Passwords</h2>
+                    <div class="form-grid">
+                        <div class="dashboard-card" style="margin-bottom:0; box-shadow:none; border:1px solid #eee;">
+                            <h3>Reset Candidate Pwd</h3>
+                            <div class="form-group">
+                                <label>User Name</label>
+                                <input type="text" id="resetCandUserName" placeholder="Enter user name">
+                                <label>New Password</label>
+                                <input type="password" id="newCandPwd" placeholder="Enter new password">
+                                <label>Confirm New Password</label>
+                                <input type="password" id="confirmCandPwd" placeholder="Confirm new password">
+                                <button onclick="resetPassword('candidate')" class="btn-red" style="width:100%"><i
+                                        class="fas fa-redo"></i> Reset</button>
+                            </div>
+                        </div>
+                        <div class="dashboard-card" style="margin-bottom:0; box-shadow:none; border:1px solid #eee;">
+                            <h3>Reset Voter Pwd</h3>
+                            <div class="form-group">
+                                <label>User Name</label>
+                                <input type="text" id="resetVoterUserName" placeholder="Enter user name">
+                                <label>New Password</label>
+                                <input type="password" id="newVoterPwd" placeholder="Enter new password">
+                                <label>Confirm New Password</label>
+                                <input type="password" id="confirmVoterPwd" placeholder="Confirm new password">
+                                <button onclick="resetPassword('voter')" class="btn-red" style="width:100%"><i
+                                        class="fas fa-redo"></i> Reset</button>
+                            </div>
+                        </div>
+                        <div class="dashboard-card" style="margin-bottom:0; box-shadow:none; border:1px solid #eee;">
+                            <h3>Change My Password</h3>
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" id="currOffPwd" placeholder="Enter current">
+                                <label>New Password</label>
+                                <input type="password" id="newOffPwd" placeholder="Enter new">
+                                <label>Confirm New Password</label>
+                                <input type="password" id="confirmOffPwd" placeholder="Confirm new">
+                                <button onclick="resetPassword('self')" class="btn-red" style="width:100%"><i
+                                        class="fas fa-sync"></i> Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Results Module -->
+            <div id="view-results" class="module-content">
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-poll-h"></i> System Generated Results</h2>
+                    <p>Official results as generated by the System Administrator.</p>
+                    <div class="dashboard-card" style="background: #f8f9fa;">
+                        <p style="text-align:center; padding: 20px;">Results are hidden until the Administrator
+                            publishes them.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Gadaa Bank. All Rights Reserved. | Officer Portal v1.0</p>
+    </footer>
+
+    <script>
+        // Init Storage
+        if (!localStorage.getItem('candidates')) localStorage.setItem('candidates', JSON.stringify([]));
+        if (!localStorage.getItem('voters')) localStorage.setItem('voters', JSON.stringify([]));
+
+        function showModule(moduleId) {
+            // Hide all
+            document.querySelectorAll('.module-content').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
+            // Show selected
+            document.getElementById(moduleId).classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            if (moduleId === 'scrutiny') refreshScrutinyTable();
+            if (moduleId === 'view-candidates') refreshCandidateLists();
+        }
+
+        function handleCandidateRegistration(e) {
+            e.preventDefault();
+
+            const photoFile = document.getElementById('candPhoto').files[0];
+            const docFile = document.getElementById('candDocs').files[0];
+
+            const cand = {
+                id: document.getElementById('candID').value,
+                firstName: document.getElementById('candFirstName').value,
+                middleName: document.getElementById('candMiddleName').value,
+                lastName: document.getElementById('candLastName').value,
+                age: document.getElementById('candAge').value,
+                sex: document.getElementById('candSex').value,
+                email: document.getElementById('candEmail').value,
+                phone: document.getElementById('candPhone').value,
+                password: document.getElementById('candPwd').value,
+                education: document.getElementById('candEdu').value,
+                experience: document.getElementById('candExp').value,
+                bio: document.getElementById('candBio').value,
+                name: `${document.getElementById('candFirstName').value} ${document.getElementById('candMiddleName').value} ${document.getElementById('candLastName').value}`,
+                photoName: photoFile ? photoFile.name : 'No image',
+                docName: docFile ? docFile.name : 'No document',
+                status: 'Registered'
+            };
+
+            let cands = JSON.parse(localStorage.getItem('candidates')) || [];
+            cands.push(cand);
+            localStorage.setItem('candidates', JSON.stringify(cands));
+            alert('Candidate Registered Successfully with documents!');
+            e.target.reset();
+        }
+
+        function handleVoterRegistration(e) {
+            e.preventDefault();
+
+            const photoFile = document.getElementById('voterPhoto').files[0];
+            const shareDocFile = document.getElementById('voterShareDoc').files[0];
+
+            const voter = {
+                id: document.getElementById('voterID').value,
+                firstName: document.getElementById('voterFirstName').value,
+                middleName: document.getElementById('voterMiddleName').value,
+                lastName: document.getElementById('voterLastName').value,
+                age: document.getElementById('voterAge').value,
+                sex: document.getElementById('voterSex').value,
+                email: document.getElementById('voterEmail').value,
+                phone: document.getElementById('voterPhone').value,
+                password: document.getElementById('voterPwd').value,
+                name: `${document.getElementById('voterFirstName').value} ${document.getElementById('voterMiddleName').value} ${document.getElementById('voterLastName').value}`,
+                status: document.getElementById('voterStatus').value === 'yes' ? 'Approved' : 'Pending',
+                shares: document.getElementById('voterShares').value,
+                photoName: photoFile ? photoFile.name : 'No image',
+                shareDocName: shareDocFile ? shareDocFile.name : 'No document'
+            };
+
+            let voters = JSON.parse(localStorage.getItem('voters')) || [];
+            voters.push(voter);
+            localStorage.setItem('voters', JSON.stringify(voters));
+            alert('Voter Registered Successfully with Shareholder Document!');
+            e.target.reset();
+        }
+
+        function refreshScrutinyTable() {
+            const table = document.getElementById('scrutinyTableBody');
+            const cands = JSON.parse(localStorage.getItem('candidates'));
+            table.innerHTML = '';
+
+            cands.forEach((c, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${c.name}</td>
+                    <td>${c.education}</td>
+                    <td>${c.experience} yrs</td>
+                    <td><span class="badge ${c.status === 'Final' ? 'badge-approved' : 'badge-pending'}">${c.status}</span></td>
+                    <td>
+                        <button onclick="approveCandidate(${index})" class="action-btn btn-approve" ${c.status === 'Final' ? 'disabled' : ''}>
+                            <i class="fas fa-check"></i> Finalize
+                        </button>
+                    </td>
+                `;
+                table.appendChild(tr);
+            });
+        }
+
+        function approveCandidate(index) {
+            let cands = JSON.parse(localStorage.getItem('candidates'));
+            cands[index].status = 'Final';
+            localStorage.setItem('candidates', JSON.stringify(cands));
+            refreshScrutinyTable();
+        }
+
+        function refreshCandidateLists() {
+            const registered = document.getElementById('candidateListContainer');
+            const finalized = document.getElementById('finalCandidateListContainer');
+            const cands = JSON.parse(localStorage.getItem('candidates'));
+
+            registered.innerHTML = '';
+            finalized.innerHTML = '';
+
+            cands.forEach(c => {
+                const card = `
+                    <div style="background:#f9f9f9; padding:15px; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--primary-red)">
+                        <strong>${c.name}</strong> (${c.id})<br>
+                        <small>${c.education} | ${c.experience} yrs exp</small><br>
+                        <small style="color: #666"><i class="fas fa-camera"></i> ${c.photoName} | <i class="fas fa-file-pdf"></i> ${c.docName}</small>
+                    </div>
+                `;
+                if (c.status === 'Final') {
+                    finalized.innerHTML += card;
+                } else {
+                    registered.innerHTML += card;
+                }
+            });
+        }
+
+        function resetPassword(role) {
+            let pass1, pass2, user;
+            if (role === 'candidate') {
+                user = document.getElementById('resetCandUserName').value;
+                pass1 = document.getElementById('newCandPwd').value;
+                pass2 = document.getElementById('confirmCandPwd').value;
+            } else if (role === 'voter') {
+                user = document.getElementById('resetVoterUserName').value;
+                pass1 = document.getElementById('newVoterPwd').value;
+                pass2 = document.getElementById('confirmVoterPwd').value;
+            } else {
+                pass1 = document.getElementById('newOffPwd').value;
+                pass2 = document.getElementById('confirmOffPwd').value;
+            }
+
+            if (!pass1 || !pass2 || (role !== 'self' && !user)) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            if (pass1 !== pass2) {
+                alert('Passwords do not match! Please confirm again.');
+                return;
+            }
+
+            alert('Password reset process successful for ' + (user || role) + '.');
+        }
+    </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('input[type="password"]').forEach(input => {
+            // Avoid duplicate additions
+            if (input.parentNode.classList.contains('show-pwd-wrap')) return;
+
+            // Create wrapper for the checkbox
+            const wrapper = document.createElement('div');
+            wrapper.className = 'show-pwd-wrap';
+            wrapper.style.display = 'flex';
+            wrapper.style.alignItems = 'center';
+            wrapper.style.marginTop = '8px';
+            wrapper.style.marginBottom = '10px';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.style.marginRight = '6px';
+            checkbox.style.cursor = 'pointer';
+            checkbox.style.width = 'auto'; // override any 100% width from CSS
+            checkbox.style.height = 'auto'; // override any height
+
+            const label = document.createElement('label');
+            label.textContent = 'Show Password';
+            label.style.cursor = 'pointer';
+            label.style.margin = '0';
+            label.style.fontWeight = 'normal';
+            label.style.fontSize = '14px';
+            label.style.color = '#555';
+
+            wrapper.appendChild(checkbox);
+            wrapper.appendChild(label);
+
+            // Insert after the input field
+            input.parentNode.insertBefore(wrapper, input.nextSibling);
+
+            checkbox.addEventListener('change', function() {
+                input.type = this.checked ? 'text' : 'password';
+            });
+            
+            label.addEventListener('click', function(e) {
+                // To prevent double triggering since label clicking checks the box automatically if they are linked by ID.
+                // Here we just toggle the checkbox directly if the label is clicked.
+                e.preventDefault();
+                checkbox.checked = !checkbox.checked;
+                checkbox.dispatchEvent(new Event('change'));
+            });
+        });
+    });
+</script>
+</body>
+
+</html>

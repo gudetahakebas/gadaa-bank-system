@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Dashboard | Gadaa Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+</head>
+
+<body>
+
+    <!-- Top Information Bar -->
+    <div class="top-bar">
+        <span><i class="fas fa-phone-alt"></i> 641</span>
+        <span><i class="fas fa-envelope"></i> info@gadaabank.com.et</span>
+        <span><i class="fas fa-map-marker-alt"></i> Head Office – Addis Ababa</span>
+    </div>
+
+    <!-- Logo Section -->
+    <div class="logo-bar">
+        <img src="assets/images/logo.png" alt="Gadaa Bank Logo">
+        <div>
+            <h2>Gadaa Bank</h2>
+            <small>New Generation’s Bank Dashboard</small>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-user-tie"></i> Candidate Portal</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-link active" onclick="showModule('my-profile')">
+                    <i class="fas fa-user-circle"></i> My Profile
+                </a>
+                <a href="#" class="nav-link" onclick="showModule('candidate-list')">
+                    <i class="fas fa-users"></i> Other Candidates
+                </a>
+                <a href="#" class="nav-link" onclick="showModule('change-password')">
+                    <i class="fas fa-key"></i> Change Password
+                </a>
+                <a href="index.html" class="nav-link"
+                    style="margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.1)">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- My Profile Module -->
+            <div id="my-profile" class="module-content active">
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-user-circle"></i> My Account Details</h2>
+                    <div class="profile-display" id="profileDisplay">
+                        <!-- Simulation Data -->
+                        <div style="display: flex; gap: 30px; align-items: start;">
+                            <img src="https://via.placeholder.com/150" alt="Profile"
+                                style="border-radius: 15px; border: 4px solid #eee;">
+                            <div style="flex-grow: 1;">
+                                <h3 id="profName" style="color: var(--primary-red); margin-bottom: 10px;">Candidate Name
+                                </h3>
+                                <p><strong>Username:</strong> <span id="profUser">candidate_user</span></p>
+                                <p><strong>Email:</strong> candidate@example.com</p>
+                                <p><strong>ID:</strong> CAND-8822</p>
+                                <p><strong>Status:</strong> <span class="badge badge-approved">Finalized</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Candidate List Module -->
+            <div id="candidate-list" class="module-content">
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-users"></i> All Candidates</h2>
+                    <div id="candidateListContainer">
+                        <!-- JS will populate cards -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Management Module -->
+            <div id="change-password" class="module-content">
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-key"></i> Change My Password</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Old Password</label>
+                            <input type="password" id="oldPwd" placeholder="Enter current password" required>
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <div style="position: relative;">
+                                <input type="password" id="newPwd" placeholder="Enter new password" required>
+                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm New Password</label>
+                            <input type="password" id="confirmPwd" placeholder="Confirm new password" required>
+                        </div>
+                        <button onclick="handleChangePassword()" class="btn-red"><i class="fas fa-sync"></i> Update
+                            Password</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Gadaa Bank. All Rights Reserved. | Candidate Portal v1.0</p>
+    </footer>
+
+    <script>
+        function showModule(moduleId) {
+            document.querySelectorAll('.module-content').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
+            document.getElementById(moduleId).classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            if (moduleId === 'candidate-list') refreshCandidateLists();
+        }
+
+        function togglePasswordVisibility(id, icon) {
+            const el = document.getElementById(id);
+            if (el.type === "password") {
+                el.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                el.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function handleChangePassword() {
+            const oldPass = document.getElementById('oldPwd').value;
+            const newPass = document.getElementById('newPwd').value;
+            const confirmPass = document.getElementById('confirmPwd').value;
+
+            if (!oldPass || !newPass || !confirmPass) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                alert('New passwords do not match!');
+                return;
+            }
+
+            // Simple simulation
+            alert('Password updated successfully!');
+            document.getElementById('oldPwd').value = '';
+            document.getElementById('newPwd').value = '';
+            document.getElementById('confirmPwd').value = '';
+        }
+
+        function refreshCandidateLists() {
+            const container = document.getElementById('candidateListContainer');
+            const cands = JSON.parse(localStorage.getItem('candidates')) || [];
+
+            if (cands.length === 0) {
+                container.innerHTML = '<p style="text-align:center; padding: 20px;">No other candidates registered yet.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            cands.forEach(c => {
+                const card = `
+                    <div style="background:#f9f9f9; padding:15px; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--primary-red)">
+                        <strong>${c.name}</strong> (${c.id})<br>
+                        <small>${c.education} | ${c.experience} yrs exp</small><br>
+                        <small><span class="badge ${c.status === 'Final' ? 'badge-approved' : 'badge-pending'}">${c.status}</span></small>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        // Simulating logged in user name
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const user = urlParams.get('user') || 'Candidate User';
+            document.getElementById('profName').innerText = user;
+            document.getElementById('profUser').innerText = user.toLowerCase().replace(' ', '_');
+        };
+    </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('input[type="password"]').forEach(input => {
+            // Avoid duplicate additions
+            if (input.parentNode.classList.contains('show-pwd-wrap')) return;
+
+            // Create wrapper for the checkbox
+            const wrapper = document.createElement('div');
+            wrapper.className = 'show-pwd-wrap';
+            wrapper.style.display = 'flex';
+            wrapper.style.alignItems = 'center';
+            wrapper.style.marginTop = '8px';
+            wrapper.style.marginBottom = '10px';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.style.marginRight = '6px';
+            checkbox.style.cursor = 'pointer';
+            checkbox.style.width = 'auto'; // override any 100% width from CSS
+            checkbox.style.height = 'auto'; // override any height
+
+            const label = document.createElement('label');
+            label.textContent = 'Show Password';
+            label.style.cursor = 'pointer';
+            label.style.margin = '0';
+            label.style.fontWeight = 'normal';
+            label.style.fontSize = '14px';
+            label.style.color = '#555';
+
+            wrapper.appendChild(checkbox);
+            wrapper.appendChild(label);
+
+            // Insert after the input field
+            input.parentNode.insertBefore(wrapper, input.nextSibling);
+
+            checkbox.addEventListener('change', function() {
+                input.type = this.checked ? 'text' : 'password';
+            });
+            
+            label.addEventListener('click', function(e) {
+                // To prevent double triggering since label clicking checks the box automatically if they are linked by ID.
+                // Here we just toggle the checkbox directly if the label is clicked.
+                e.preventDefault();
+                checkbox.checked = !checkbox.checked;
+                checkbox.dispatchEvent(new Event('change'));
+            });
+        });
+    });
+</script>
+</body>
+
+</html>

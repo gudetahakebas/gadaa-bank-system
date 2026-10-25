@@ -1,0 +1,30 @@
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Local database and backup files
+*.sqlite
+*.sqlite3
+*.db
+*.bak
+*.backup
+*.sql.bak
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+# Local database configuration and sensitive utilities
+/db_config.php
+/debug_db.php
+/fix_admin.php
+# Exclude uploaded documents and images, but keep the directory protection file
+/uploads/*
+!/uploads/index.php
