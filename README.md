@@ -55,6 +55,36 @@ This academic group project was developed to apply practical knowledge of web de
 - Improved user interface and responsiveness.
 - Advanced election reporting.
 - Automated testing and validation.
+---
+
+## Application Screenshots
+
+### Home Page
+![Home Page](screenshots/home%20page.png)
+
+### Voter Login
+![Voter Login](screenshots/voter%20login.png)
+
+### Candidate Registration
+![Candidate Registration](screenshots/candidate%20registration.png)
+
+### Candidate Management
+![Candidate Listing](screenshots/view%20candidate%20page.png)
+
+### Candidate Biography
+![Candidate Biography](screenshots/viewing%20biography.png)
+
+### Election Period Management
+![Election Management](screenshots/period%20set%20by%20admin.png)
+
+### Vote Confirmation
+![Vote Confirmation](screenshots/confirming%20vote.png)
+
+### Voter Registration Confirmation
+![Voter Registration](screenshots/voter%20registration%20sucessfully.png)
+
+### Election Results
+![Election Results](screenshots/result%20page%20before%20pulished.png)
 
 ## Author
 
